@@ -4,149 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>防咬指甲监控器</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    
-    <!-- 直接在这里写 CSS，不再引用外部文件 -->
-    <style>
-        /* === 把 style.css 里的所有代码都粘贴到这里 === */
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f0f2f5;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        /* 语言切换按钮 */
-        .lang-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .lang-btn:hover {
-            background: #e0e0e0;
-        }
-
-        h1 { margin-top: 20px; margin-bottom: 10px; }
-
-        .container {
-            position: relative;
-            margin-top: 10px;
-            text-align: center;
-            width: 100%;
-            max-width: 680px;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 640px;
-            height: 480px;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            margin: 0 auto;
-        }
-
-        video, canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            transform: scaleX(-1); object-fit: cover;
-        }
-
-        .tip-text {
-            margin-top: 15px; margin-bottom: 5px;
-            color: #666; font-size: 14px;
-            background: #e8e8e8;
-            display: inline-block;
-            padding: 5px 15px; border-radius: 20px;
-        }
-
-        #status { font-weight: bold; margin-bottom: 10px; font-size: 18px; }
-
-        .controls {
-            margin-top: 15px; display: flex; justify-content: center; gap: 15px;
-            padding-bottom: 30px; flex-wrap: wrap; 
-        }
-
-        .alert-mode { border: 6px solid #ff4444; box-sizing: border-box; }
-
-        .coffee-btn {
-            background-color: #FFDD00 !important;
-            color: #000 !important;
-            font-weight: bold;
-        }
-
-        /* === 弹窗样式 === */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 100; 
-            left: 0; top: 0;
-            width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.5); 
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto; 
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;          
-            max-width: 350px;    
-            text-align: center;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: popIn 0.3s ease;
-        }
-
-        .qr-img {
-            width: 100%;        
-            max-width: 260px;   
-            height: auto;       
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-            display: inline-block;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px; right: 15px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close-btn:hover { color: #000; }
-
-        @keyframes popIn {
-            from {transform: scale(0.8); opacity: 0;}
-            to {transform: scale(1); opacity: 1;}
-        }
-    </style>
 </head>
-
 <body>
 
-    <!-- 语言切换按钮 (右上角) -->
     <button id="langSwitch" class="lang-btn">🇺🇸 English</button>
 
     <h1 data-i18n="title">🚫 不要咬指甲！</h1>
     
     <div class="container">
+        
+        <!-- 新增：数据统计面板 -->
+        <div class="stats-panel">
+            <!-- 左边：今日数据 -->
+            <div class="stat-box">
+                <div class="stat-label" data-i18n="stat_today">今日咬手次数</div>
+                <div class="stat-value" id="todayCount">0</div>
+            </div>
+            <!-- 右边：坚持时间 -->
+            <div class="stat-box">
+                <div class="stat-label" data-i18n="stat_streak">已坚持 (未咬)</div>
+                <div class="stat-value highlight" id="streakTimer">00:00:00</div>
+            </div>
+        </div>
+
+        <!-- 新增：热力图 (GitHub Style) -->
+        <div class="heatmap-container">
+            <p class="tip-text" style="margin:0 0 10px 0;" data-i18n="heatmap_title">📅 过去 30 天记录 (颜色越红=咬得越多)</p>
+            <div class="heatmap-grid" id="heatmap"></div>
+        </div>
+
         <p id="status" data-i18n="status_wait">⏳ 等待摄像头授权...</p>
         
         <div class="video-wrapper">
@@ -159,29 +47,25 @@
         </p>
 
         <div class="controls">
-            <!-- 画中画按钮 -->
             <button id="pipButton" class="mdc-button mdc-button--outlined" style="display: none;">
                 <span class="mdc-button__label" data-i18n="btn_pip">📺 开启悬浮小窗</span>
             </button>
 
-            <!-- 监控开关 -->
             <button id="enableWebcamButton" class="mdc-button mdc-button--raised">
                 <span class="mdc-button__label" data-i18n="btn_start">开启摄像头监控</span>
             </button>
 
-            <!-- 支持作者按钮 (智能) -->
             <button id="donateButton" class="mdc-button mdc-button--raised coffee-btn">
                 <span class="mdc-button__label" data-i18n="btn_donate">🧧 支持作者</span>
             </button>
         </div>
     </div>
 
-    <!-- 二维码弹窗 (默认隐藏) -->
+    <!-- 弹窗保持不变 -->
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h3 data-i18n="modal_title">感谢你的支持！❤️</h3>
-            <!-- 记得确保文件夹里有 qr.jpg -->
             <img src="qr.jpg" alt="收款码" class="qr-img">
             <p data-i18n="modal_desc">微信 / 支付宝 扫一扫</p>
         </div>
@@ -190,4 +74,3 @@
     <script type="module" src="script.js"></script>
 </body>
 </html>
-

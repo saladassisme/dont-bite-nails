@@ -1,3 +1,5 @@
+/* === 基础样式保持不变，在下面增加新的样式 === */
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
@@ -9,24 +11,7 @@ body {
     padding: 20px;
 }
 
-/* 语言切换按钮 */
-.lang-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 8px 15px;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-.lang-btn:hover {
-    background: #e0e0e0;
-}
-
-h1 { margin-top: 20px; margin-bottom: 10px; }
+/* ... (保留你之前的 h1, .lang-btn 等样式) ... */
 
 .container {
     position: relative;
@@ -36,92 +21,108 @@ h1 { margin-top: 20px; margin-bottom: 10px; }
     max-width: 680px;
 }
 
+/* === 新增：统计面板样式 === */
+.stats-panel {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace; /* 等宽字体像计时器 */
+}
+
+.stat-value.highlight {
+    color: #2196F3; /* 蓝色高亮计时器 */
+}
+
+/* === 新增：热力图样式 === */
+.heatmap-container {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18px, 1fr)); /* 自适应格子 */
+    gap: 4px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.day-box {
+    width: 100%;
+    aspect-ratio: 1; /* 保持正方形 */
+    border-radius: 3px;
+    background-color: #ebedf0; /* GitHub 默认灰色 */
+    position: relative;
+    cursor: pointer;
+}
+
+/* Tooltip (鼠标悬停显示日期) */
+.day-box:hover::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 热力图颜色等级 */
+.level-0 { background-color: #ebedf0; } /* 0次 - 灰色 */
+.level-1 { background-color: #9be9a8; } /* 0次(完美) - 绿色 */
+.level-2 { background-color: #ffdcae; } /* 1-5次 - 浅黄 */
+.level-3 { background-color: #ff9b9b; } /* 5-10次 - 浅红 */
+.level-4 { background-color: #ff4444; } /* >10次 - 深红 */
+
+
+/* ... (保留 video-wrapper, modal 等之前的样式) ... */
 .video-wrapper {
     position: relative;
-    width: 640px;
-    height: 480px;
+    width: 100%; /* 改成 100% 适应父容器 */
+    aspect-ratio: 4/3; /* 保持比例 */
     background: #000;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     margin: 0 auto;
 }
-
+/* 确保 video 和 canvas 也是 */
 video, canvas {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     transform: scaleX(-1); object-fit: cover;
 }
 
-.tip-text {
-    margin-top: 15px; margin-bottom: 5px;
-    color: #666; font-size: 14px;
-    background: #e8e8e8;
-    display: inline-block;
-    padding: 5px 15px; border-radius: 20px;
-}
-
-#status { font-weight: bold; margin-bottom: 10px; font-size: 18px; }
-
-.controls {
-    margin-top: 15px; display: flex; justify-content: center; gap: 15px;
-    padding-bottom: 30px; flex-wrap: wrap; /* 防止手机上挤在一起 */
-}
-
-.alert-mode { border: 6px solid #ff4444; box-sizing: border-box; }
-
-/* 咖啡/打赏按钮 */
-.coffee-btn {
-    background-color: #FFDD00 !important;
-    color: #000 !important;
-    font-weight: bold;
-}
-
-/* === 弹窗样式 (Modal) === */
-.modal {
-    display: none; /* 默认隐藏 */
-    position: fixed; 
-    z-index: 100; 
-    left: 0; top: 0;
-    width: 100%; height: 100%; 
-    background-color: rgba(0,0,0,0.5); /* 半透明黑背景 */
-    backdrop-filter: blur(5px); /* 背景模糊效果 */
-}
-
-.modal-content {
-    background-color: #fff;
-    margin: 10% auto; 
-    padding: 25px;
-    border-radius: 15px;
-    width: 90%;          /* 手机上占满 */
-    max-width: 350px;    /* 电脑上限制最大宽度，稍微宽一点 */
-    text-align: center;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    animation: popIn 0.3s ease;
-}
-/* 修复图片尺寸问题 */
-.qr-img {
-    width: 100%;        /* 宽度撑满容器 */
-    max-width: 260px;   /* 限制最大宽度，防止太大 */
-    height: auto;       /* !!! 关键：高度自动，保持原图比例，不会变形 */
-    margin: 15px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 加一点阴影更好看 */
-    display: inline-block;
-}
-.close-btn {
-    position: absolute;
-    top: 10px; right: 15px;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.close-btn:hover { color: #000; }
-
-@keyframes popIn {
-    from {transform: scale(0.8); opacity: 0;}
-    to {transform: scale(1); opacity: 1;}
-
-}
+/* 这里的 .coffee-btn, .modal, .tip-text 等样式请保留你之前的代码 */
+/* ... */
