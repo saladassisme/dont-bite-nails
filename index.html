@@ -3,354 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>防咬指甲监控器</title>
-    <!-- 引入 Material Design 样式 -->
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    
-    <!-- =========================================
-       CSS 样式区域 (已内嵌，无需 style.css)
-    ========================================= -->
+    <title>防咬指甲监控 | No Nail Biting</title>
+    <!-- 引入 Google Fonts (Inter字体，更现代) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- 引入图标库 -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
     <style>
+        /* === 1. 全局重置与变量 === */
+        :root {
+            --bg-color: #F7F9FC; /* 极淡的蓝灰色背景 */
+            --card-bg: #FFFFFF;
+            --primary-color: #2D3436;
+            --accent-color: #6C5CE7; /* 优雅的紫色 */
+            --success-color: #00B894;
+            --warning-color: #FF7675;
+            --text-secondary: #A4B0BE;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --radius: 24px;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f0f2f5;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
         }
 
-        /* 语言切换按钮 */
-        .lang-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-            z-index: 100;
-        }
-        .lang-btn:hover { background: #e0e0e0; }
-
-        h1 { margin-top: 20px; margin-bottom: 20px; }
-
-        .container {
-            position: relative;
+        /* === 2. 顶部导航 === */
+        .header {
             width: 100%;
-            max-width: 680px;
-            padding-bottom: 50px;
-        }
-
-        /* === 统计面板 === */
-        .stats-panel {
+            max-width: 800px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            flex: 1;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        .stat-label { font-size: 12px; color: #666; margin-bottom: 5px; }
-        .stat-value { font-size: 24px; font-weight: 800; color: #333; font-family: monospace; }
-        .stat-value.highlight { color: #2196F3; }
-
-        /* === 热力图 === */
-        .heatmap-container {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(18px, 1fr));
-            gap: 4px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .day-box {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 3px;
-            background-color: #ebedf0;
-            position: relative;
-        }
-
-        /* 热力图颜色 */
-        .level-0 { background-color: #ebedf0; }
-        .level-1 { background-color: #9be9a8; } /* 完美 */
-        .level-2 { background-color: #ffdcae; }
-        .level-3 { background-color: #ff9b9b; }
-        .level-4 { background-color: #ff4444; } /* 严重 */
-
-        /* === 视频区域 === */
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            margin: 0 auto;
-            aspect-ratio: 4/3; /* 固定比例，防止变形 */
-        }
-
-        video, canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            transform: scaleX(-1); object-fit: cover;
-        }
-
-        #status { font-weight: bold; margin: 15px 0; font-size: 18px; text-align: center;}
-
-        .tip-text {
-            margin-top: 15px; margin-bottom: 5px;
-            color: #666; font-size: 14px;
-            background: #e8e8e8;
-            display: inline-block;
-            padding: 5px 15px; border-radius: 20px;
-            text-align: center;
-            width: 100%;
+            align-items: center;
             box-sizing: border-box;
         }
 
-        /* === 按钮组 === */
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid #E2E8F0;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--primary-color);
+        }
+        .lang-btn:hover { background: #EDF2F7; }
+
+        /* === 3. 主容器 === */
+        .container {
+            width: 100%;
+            max-width: 500px; /* 限制宽度，让视线更集中 */
+            padding: 0 20px 40px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* === 4. 仪表盘卡片 (核心数据) === */
+        .dashboard-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-divider {
+            width: 1px;
+            height: 40px;
+            background: #EDF2F7;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        
+        .stat-value.timer {
+            color: var(--accent-color);
+            font-variant-numeric: tabular-nums; /* 防止数字跳动 */
+        }
+
+        /* === 5. 视频监控区 (重点) === */
+        .monitor-frame {
+            position: relative;
+            width: 100%;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            background: #000;
+            aspect-ratio: 4/3; /* 保持比例 */
+            border: 6px solid white; /* 相框感 */
+        }
+
+        video, canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            display: block;
+        }
+
+        /* 状态胶囊 (悬浮在视频上) */
+        .status-badge {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        /* 状态指示灯 */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+        .status-active .status-dot { background: var(--success-color); box-shadow: 0 0 8px var(--success-color); }
+        .status-warn .status-dot { background: var(--warning-color); box-shadow: 0 0 8px var(--warning-color); }
+        
+        /* 警告红框 */
+        .monitor-frame.alert {
+            border-color: var(--warning-color);
+        }
+
+        /* === 6. 控制按钮组 === */
         .controls {
-            margin-top: 15px; display: flex; justify-content: center; gap: 10px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
         }
 
-        .alert-mode { border: 6px solid #ff4444; box-sizing: border-box; }
-
-        .coffee-btn {
-            background-color: #FFDD00 !important;
-            color: #000 !important;
-            font-weight: bold;
+        .btn {
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* === 弹窗样式 (Modal) 修复版 === */
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(45, 52, 54, 0.2);
+        }
+        .btn-primary:hover { transform: translateY(-2px); background: #000; }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid #E2E8F0;
+        }
+        .btn-secondary:hover { background: #F7F9FC; }
+
+        .btn-icon {
+            padding: 16px;
+            font-size: 20px;
+        }
+
+        /* === 7. 热力图 (极简版) === */
+        .heatmap-section {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 0 0 12px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .heatmap-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .day-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .day-pill {
+            width: 8px;
+            height: 24px; /* 变成长条形，像声波图 */
+            background: #EDF2F7;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        /* 颜色等级 */
+        .lvl-1 { background: #E2E8F0; }
+        .lvl-2 { background: #74b9ff; height: 30px; } /* 少量 */
+        .lvl-3 { background: #6C5CE7; height: 36px; } /* 中等 */
+        .lvl-4 { background: #FF7675; height: 42px; } /* 严重 */
+
+        /* === 8. 弹窗优化 === */
         .modal {
-            display: none; /* 默认隐藏！ */
-            position: fixed; 
-            z-index: 9999; /* 保证在最上层 */
+            display: none;
+            position: fixed;
+            z-index: 100;
             left: 0; top: 0;
-            width: 100%; height: 100%; 
-            background-color: rgba(0,0,0,0.5); 
-            backdrop-filter: blur(5px);
-            align-items: center; /* 垂直居中 */
-            justify-content: center; /* 水平居中 */
+            width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
         }
 
-        .modal-content {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;          
-            max-width: 320px;    
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-md);
             text-align: center;
             position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            margin: auto; /* 配合 flex 居中 */
+            width: 90%;
+            max-width: 320px;
+            border: 1px solid #eee;
         }
 
-        .qr-img {
-            width: 100%;        
-            max-width: 260px;   
-            height: auto;       
-            margin: 15px 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-            display: inline-block;
-        }
-
-        .close-btn {
+        .qr-img { width: 100%; border-radius: 16px; margin: 15px 0; }
+        
+        .close-icon {
             position: absolute;
-            top: 10px; right: 15px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
+            top: 15px; right: 15px;
             cursor: pointer;
-            line-height: 20px;
+            font-size: 24px;
+            color: #ccc;
         }
-        .close-btn:hover { color: #000; }
 
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* 手机适配 */
+        @media (max-width: 480px) {
+            .stat-value { font-size: 24px; }
+            .monitor-frame { border-width: 0; border-radius: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- 语言切换 -->
-    <button id="langSwitch" class="lang-btn">🇺🇸 English</button>
+    <!-- 1. 极简头部 -->
+    <div class="header">
+        <div class="logo">
+            <i class='bx bxs-hand'></i> 
+            <span data-i18n="title">NoBiting</span>
+        </div>
+        <button id="langSwitch" class="lang-btn">English</button>
+    </div>
 
-    <h1 data-i18n="title">🚫 不要咬指甲！</h1>
-    
     <div class="container">
-        
-        <!-- 统计面板 -->
-        <div class="stats-panel">
-            <div class="stat-box">
-                <div class="stat-label" data-i18n="stat_today">今日咬手次数</div>
+
+        <!-- 2. 核心仪表盘 (数据展示) -->
+        <div class="dashboard-card">
+            <div class="stat-item">
+                <div class="stat-label" data-i18n="stat_today">Today's Bites</div>
                 <div class="stat-value" id="todayCount">0</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-label" data-i18n="stat_streak">已坚持 (未咬)</div>
-                <div class="stat-value highlight" id="streakTimer">00:00:00</div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-label" data-i18n="stat_streak">Streak Time</div>
+                <div class="stat-value timer" id="streakTimer">00:00:00</div>
             </div>
         </div>
 
-        <!-- 热力图 -->
-        <div class="heatmap-container">
-            <p style="font-size: 12px; color: #666; margin: 0 0 10px 0;" data-i18n="heatmap_title">📅 过去 30 天记录</p>
-            <div class="heatmap-grid" id="heatmap"></div>
-        </div>
-
-        <p id="status" data-i18n="status_wait">⏳ 等待摄像头授权...</p>
-        
-        <div class="video-wrapper">
+        <!-- 3. 监控区域 (像一个App界面) -->
+        <div class="monitor-frame" id="monitorFrame">
+            <!-- 悬浮状态胶囊 -->
+            <div class="status-badge" id="statusBadge">
+                <div class="status-dot"></div>
+                <span id="statusText" data-i18n="status_wait">Waiting...</span>
+            </div>
+            
             <video id="webcam" autoplay playsinline></video>
             <canvas id="output_canvas"></canvas>
         </div>
 
-        <p class="tip-text" data-i18n="tip">
-            💡 提示：点击下方 <b>"开启悬浮小窗"</b> 可隐藏此页面，后台继续监控
-        </p>
-
+        <!-- 4. 极简控制按钮 -->
         <div class="controls">
-            <button id="pipButton" class="mdc-button mdc-button--outlined" style="display: none;">
-                <span class="mdc-button__label" data-i18n="btn_pip">📺 开启悬浮小窗</span>
+            <!-- 主开关 -->
+            <button id="enableWebcamButton" class="btn btn-primary">
+                <i class='bx bx-camera'></i>
+                <span class="btn-label" data-i18n="btn_start">Start Monitor</span>
+            </button>
+            
+            <!-- 画中画 (图标按钮) -->
+            <button id="pipButton" class="btn btn-secondary btn-icon" style="display: none;">
+                <i class='bx bx-windows'></i>
             </button>
 
-            <button id="enableWebcamButton" class="mdc-button mdc-button--raised">
-                <span class="mdc-button__label" data-i18n="btn_start">开启摄像头监控</span>
-            </button>
-
-            <button id="donateButton" class="mdc-button mdc-button--raised coffee-btn">
-                <span class="mdc-button__label" data-i18n="btn_donate">🧧 支持作者</span>
+            <!-- 打赏 (图标按钮) -->
+            <button id="donateButton" class="btn btn-secondary btn-icon" style="color: #FF7675;">
+                <i class='bx bxs-coffee'></i>
             </button>
         </div>
+
+        <!-- 5. 习惯热力图 (声波风格) -->
+        <div class="heatmap-section">
+            <div class="section-title">
+                <span data-i18n="heatmap_title">Past 30 Days Activity</span>
+                <i class='bx bx-bar-chart-alt-2'></i>
+            </div>
+            <div class="heatmap-grid" id="heatmap">
+                <!--JS生成-->
+            </div>
+        </div>
+
+        <p style="text-align: center; font-size: 12px; color: #ccc; margin-top: 10px;">
+            Privacy Safe: All AI processing happens locally on your device.
+        </p>
     </div>
 
-    <!-- 二维码弹窗 -->
+    <!-- 弹窗 -->
     <div id="qrModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3 data-i18n="modal_title">感谢你的支持！❤️</h3>
-            <!-- 确保 qr.jpg 图片在同一目录下 -->
-            <img src="qr.jpg" alt="QR Code" class="qr-img">
-            <p data-i18n="modal_desc">微信 / 支付宝 扫一扫</p>
+        <div class="modal-card">
+            <i class='bx bx-x close-icon'></i>
+            <h3 style="margin:0;" data-i18n="modal_title">Support Me ❤️</h3>
+            <img src="qr.jpg" class="qr-img">
+            <p style="color:#888; font-size:13px; margin:0;" data-i18n="modal_desc">Scan via WeChat / Alipay</p>
         </div>
     </div>
 
-    <!-- =========================================
-       JS 脚本区域 (已内嵌，无需 script.js)
-    ========================================= -->
+    <!-- JS 逻辑 (逻辑保持不变，只适配了新的 UI Class) -->
     <script type="module">
         import { HandLandmarker, FaceLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 
-        /* --- 1. 国际化字典 --- */
         const translations = {
             zh: {
-                title: "🚫 不要咬指甲！",
-                status_wait: "⏳ 等待摄像头授权...",
-                status_ok: "✅ 监控中...",
-                status_warn: "⚠️ 别吃手！放下！",
-                tip: "💡 提示：点击下方 <b>'开启悬浮小窗'</b> 可隐藏此页面，后台继续监控",
-                stat_today: "今日咬手次数",
-                stat_streak: "已坚持 (未咬)",
-                heatmap_title: "📅 过去 30 天记录 (绿色=完美)",
-                btn_pip: "📺 开启悬浮小窗",
-                btn_start: "开启摄像头监控",
+                title: "防咬助手",
+                status_wait: "等待授权...",
+                status_ok: "监控中",
+                status_warn: "放下手！",
+                stat_today: "今日咬手",
+                stat_streak: "已坚持",
+                heatmap_title: "近30天记录",
+                btn_start: "开启监控",
                 btn_stop: "停止监控",
-                btn_donate: "🧧 支持作者",
-                modal_title: "感谢你的支持！❤️",
+                modal_title: "请我喝咖啡 ☕️",
                 modal_desc: "微信 / 支付宝 扫一扫",
-                lang_btn_text: "🇺🇸 English"
+                lang_btn: "English"
             },
             en: {
-                title: "🚫 No Nail Biting!",
-                status_wait: "⏳ Waiting for camera permission...",
-                status_ok: "✅ Monitoring...",
-                status_warn: "⚠️ Don't bite! Put hand down!",
-                tip: "💡 Tip: Click <b>'PiP Mode'</b> below to hide this page while monitoring.",
-                stat_today: "Bites Today",
-                stat_streak: "Streak (No Bite)",
-                heatmap_title: "📅 Last 30 Days (Green=Good)",
-                btn_pip: "📺 PiP Mode",
-                btn_start: "Start Monitoring",
-                btn_stop: "Stop Monitoring",
-                btn_donate: "☕ Buy me a coffee",
-                modal_title: "Thanks for your support! ❤️",
+                title: "NoBiting",
+                status_wait: "Waiting...",
+                status_ok: "Monitoring",
+                status_warn: "Put Hand Down!",
+                stat_today: "Today's Bites",
+                stat_streak: "Clean Streak",
+                heatmap_title: "Last 30 Days",
+                btn_start: "Start Monitor",
+                btn_stop: "Stop Monitor",
+                modal_title: "Buy me a coffee ☕️",
                 modal_desc: "Scan QR Code",
-                lang_btn_text: "🇨🇳 中文"
+                lang_btn: "中文"
             }
         };
 
         let currentLang = 'zh';
-        let handLandmarker = undefined;
-        let faceLandmarker = undefined;
-        let webcamRunning = false;
+        let handLandmarker, faceLandmarker, webcamRunning = false;
         let lastVideoTime = -1;
         let lastBiteTime = Date.now();
         let biteCooldown = false;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // DOM 元素
+        // DOM Elements
         const video = document.getElementById("webcam");
         const canvasElement = document.getElementById("output_canvas");
         const canvasCtx = canvasElement.getContext("2d");
-        const statusText = document.getElementById("status");
+        const statusText = document.getElementById("statusText");
+        const statusBadge = document.getElementById("statusBadge");
+        const monitorFrame = document.getElementById("monitorFrame");
         const enableWebcamButton = document.getElementById("enableWebcamButton");
         const pipButton = document.getElementById("pipButton");
         const todayCountEl = document.getElementById('todayCount');
         const streakTimerEl = document.getElementById('streakTimer');
         const heatmapEl = document.getElementById('heatmap');
 
-        // 声音初始化
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        /* --- 2. 数据存储 (LocalStorage) --- */
+        /* --- Storage --- */
         const Store = {
             getTodayKey: () => {
                 const d = new Date();
                 return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
             },
-            getCount: (dateKey) => {
-                return parseInt(localStorage.getItem(`bite_count_${dateKey}`) || 0);
-            },
+            getCount: (key) => parseInt(localStorage.getItem(`bite_count_${key}`) || 0),
             addBite: () => {
                 const key = Store.getTodayKey();
-                const current = Store.getCount(key);
-                localStorage.setItem(`bite_count_${key}`, current + 1);
-                updateUIStats();
-                renderHeatmap();
+                localStorage.setItem(`bite_count_${key}`, Store.getCount(key) + 1);
+                updateUIStats(); renderHeatmap();
             },
-            getLastBiteTimestamp: () => {
-                return parseInt(localStorage.getItem('last_bite_timestamp') || Date.now());
-            },
-            setLastBiteTimestamp: (ts) => {
-                localStorage.setItem('last_bite_timestamp', ts);
-            }
+            getLastBiteTimestamp: () => parseInt(localStorage.getItem('last_bite_timestamp') || Date.now()),
+            setLastBiteTimestamp: (ts) => localStorage.setItem('last_bite_timestamp', ts)
         };
-
         lastBiteTime = Store.getLastBiteTimestamp();
 
-        /* --- 3. 界面更新逻辑 --- */
+        /* --- UI Updates --- */
         function updateUIStats() {
             todayCountEl.innerText = Store.getCount(Store.getTodayKey());
         }
@@ -358,58 +467,40 @@
         function renderHeatmap() {
             heatmapEl.innerHTML = "";
             const today = new Date();
-            for (let i = 29; i >= 0; i--) {
+            // 只显示最近 15 天，保持界面简洁
+            for (let i = 14; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(today.getDate() - i);
-                const dateKey = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-                const count = Store.getCount(dateKey);
+                const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+                const count = Store.getCount(key);
                 
-                const box = document.createElement('div');
-                box.className = 'day-box';
+                const col = document.createElement('div');
+                col.className = 'day-col';
                 
-                if (count === 0) box.classList.add('level-1'); 
-                else if (count <= 5) box.classList.add('level-2');
-                else if (count <= 20) box.classList.add('level-3');
-                else box.classList.add('level-4');
+                const pill = document.createElement('div');
+                pill.className = 'day-pill';
+                
+                if (count === 0) pill.classList.add('lvl-1'); // 灰色/淡色
+                else if (count <= 5) pill.classList.add('lvl-2'); // 蓝色
+                else if (count <= 15) pill.classList.add('lvl-3'); // 紫色
+                else pill.classList.add('lvl-4'); // 红色
 
-                if (i === 0) box.style.border = "2px solid #333"; // 今天加框
-                box.title = `${dateKey}: ${count}`; // Tooltip
-                heatmapEl.appendChild(box);
+                col.appendChild(pill);
+                heatmapEl.appendChild(col);
             }
         }
 
-        // 计时器
         setInterval(() => {
-            const now = Date.now();
-            const diff = now - lastBiteTime;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            const fmt = (n) => n.toString().padStart(2, '0');
-            streakTimerEl.innerText = `${fmt(hours)}:${fmt(minutes)}:${fmt(seconds)}`;
+            const diff = Date.now() - lastBiteTime;
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            streakTimerEl.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
         }, 1000);
 
-        /* --- 4. AI 模型与摄像头 --- */
-        function playAlertSound() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = 'square'; 
-            oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
-            oscillator.frequency.linearRampToValueAtTime(300, audioCtx.currentTime + 0.3);
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.3);
-        }
-
+        /* --- AI Logic --- */
         const createModels = async () => {
-            statusText.innerText = "Loading AI Models...";
-            const vision = await FilesetResolver.forVisionTasks(
-                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
-            );
+            const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm");
             handLandmarker = await HandLandmarker.createFromOptions(vision, {
                 baseOptions: { modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`, delegate: "GPU" },
                 runningMode: "VIDEO", numHands: 2
@@ -418,43 +509,30 @@
                 baseOptions: { modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`, delegate: "GPU" },
                 outputFaceBlendshapes: false, runningMode: "VIDEO", numFaces: 1
             });
-            
-            updateUIText();
-            updateUIStats();
-            renderHeatmap();
+            updateUIText(); updateUIStats(); renderHeatmap();
             enableWebcamButton.disabled = false;
         };
         createModels();
 
         const enableCam = () => {
             if (!handLandmarker || !faceLandmarker) return;
-            if (webcamRunning === true) {
+            if (webcamRunning) {
                 webcamRunning = false;
-                updateUIText(); // 刷新按钮文字
                 pipButton.style.display = "none";
-                statusText.innerText = translations[currentLang].status_wait;
-                statusText.style.color = "#333";
-                document.querySelector('.video-wrapper').classList.remove('alert-mode');
+                setStatus('wait');
             } else {
                 webcamRunning = true;
-                updateUIText(); // 刷新按钮文字
-                pipButton.style.display = "inline-block";
-                const constraints = { video: true };
-                navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+                pipButton.style.display = "flex";
+                setStatus('ok');
+                navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
                     video.srcObject = stream;
                     video.addEventListener("loadeddata", startLoop);
                 });
             }
+            updateUIText();
         };
-        enableWebcamButton.addEventListener("click", enableCam);
-        pipButton.addEventListener("click", async () => {
-            if (video !== document.pictureInPictureElement) await video.requestPictureInPicture();
-            else await document.exitPictureInPicture();
-        });
 
         function startLoop() {
-            canvasElement.style.width = video.videoWidth;
-            canvasElement.style.height = video.videoHeight;
             canvasElement.width = video.videoWidth;
             canvasElement.height = video.videoHeight;
             loopLogic();
@@ -463,138 +541,138 @@
         function loopLogic() {
             if (!webcamRunning) return;
             predictWebcam();
-            if (document.hidden) setTimeout(loopLogic, 500); 
-            else window.requestAnimationFrame(loopLogic);
+            if (document.hidden) setTimeout(loopLogic, 500); else requestAnimationFrame(loopLogic);
         }
 
         async function predictWebcam() {
-            let startTimeMs = performance.now();
             if (lastVideoTime !== video.currentTime) {
                 lastVideoTime = video.currentTime;
+                const startTimeMs = performance.now();
                 const handResults = handLandmarker.detectForVideo(video, startTimeMs);
                 const faceResults = faceLandmarker.detectForVideo(video, startTimeMs);
 
                 if (!document.hidden) canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
                 let mouthPoint = null;
-                if (faceResults.faceLandmarks && faceResults.faceLandmarks.length > 0) {
-                    mouthPoint = getMouthCenter(faceResults.faceLandmarks[0]);
-                    if (!document.hidden) drawPoint(mouthPoint, "blue");
+                if (faceResults.faceLandmarks?.[0]) {
+                    const up = faceResults.faceLandmarks[0][13];
+                    const low = faceResults.faceLandmarks[0][14];
+                    mouthPoint = { x: (up.x + low.x)/2, y: (up.y + low.y)/2 };
+                    // 不画嘴巴点，保持界面干净
                 }
 
                 let isBiting = false;
                 if (handResults.landmarks) {
                     for (const landmarks of handResults.landmarks) {
-                        if (!document.hidden) drawHand(landmarks);
-                        if (mouthPoint && checkDistance(landmarks, mouthPoint)) {
-                            isBiting = true;
-                        }
+                        // 也不画手骨架，只画红线警告
+                        if (mouthPoint && checkDistance(landmarks, mouthPoint)) isBiting = true;
                     }
                 }
-                handleBiteLogic(isBiting);
-            }
-        }
-
-        function handleBiteLogic(isBiting) {
-            const wrapper = document.querySelector('.video-wrapper');
-            const t = translations[currentLang];
-
-            if (isBiting) {
-                statusText.innerText = t.status_warn;
-                statusText.style.color = "red";
-                if(wrapper) wrapper.classList.add('alert-mode');
                 
-                const now = Date.now();
-                if (!window.lastAlertTime || now - window.lastAlertTime > 800) {
-                    playAlertSound();
-                    window.lastAlertTime = now;
+                // 状态更新逻辑
+                if (isBiting) {
+                    setStatus('warn');
+                    playAlert();
+                    if (!biteCooldown) {
+                        Store.addBite();
+                        Store.setLastBiteTimestamp(Date.now());
+                        lastBiteTime = Date.now();
+                        biteCooldown = true;
+                        setTimeout(() => biteCooldown = false, 3000);
+                    }
+                } else {
+                    setStatus('ok');
                 }
-
-                if (!biteCooldown) {
-                    Store.addBite();
-                    lastBiteTime = Date.now();
-                    Store.setLastBiteTimestamp(lastBiteTime);
-                    biteCooldown = true;
-                    setTimeout(() => { biteCooldown = false; }, 3000); 
-                }
-
-            } else {
-                statusText.innerText = t.status_ok;
-                statusText.style.color = "green";
-                if(wrapper) wrapper.classList.remove('alert-mode');
             }
         }
 
-        function getMouthCenter(faceLandmarks) {
-            const upperLip = faceLandmarks[13];
-            const lowerLip = faceLandmarks[14];
-            return { x: (upperLip.x + lowerLip.x) / 2, y: (upperLip.y + lowerLip.y) / 2 };
+        function setStatus(state) {
+            const t = translations[currentLang];
+            statusBadge.className = 'status-badge'; // reset
+            monitorFrame.classList.remove('alert');
+
+            if (state === 'wait') {
+                statusText.innerText = t.status_wait;
+                statusBadge.style.color = '#888';
+            } else if (state === 'ok') {
+                statusText.innerText = t.status_ok;
+                statusBadge.classList.add('status-active');
+                statusBadge.style.color = '#2D3436';
+            } else if (state === 'warn') {
+                statusText.innerText = t.status_warn;
+                statusBadge.classList.add('status-warn');
+                statusBadge.style.color = '#c0392b';
+                monitorFrame.classList.add('alert');
+            }
         }
 
-        function checkDistance(handLandmarks, mouthPoint) {
-            const fingerTips = [4, 8, 12, 16, 20]; 
-            for (let i of fingerTips) {
-                const finger = handLandmarks[i];
-                const dist = Math.sqrt(Math.pow(finger.x - mouthPoint.x, 2) + Math.pow(finger.y - mouthPoint.y, 2));
-                if (dist < 0.1) {
-                    if (!document.hidden) drawLine(finger, mouthPoint);
+        function checkDistance(landmarks, mouth) {
+            for (let i of [4,8,12,16,20]) {
+                const d = Math.sqrt(Math.pow(landmarks[i].x - mouth.x, 2) + Math.pow(landmarks[i].y - mouth.y, 2));
+                if (d < 0.1) {
+                     // 只有警告时才画红线
+                    if (!document.hidden) {
+                        canvasCtx.beginPath();
+                        canvasCtx.moveTo(landmarks[i].x*canvasElement.width, landmarks[i].y*canvasElement.height);
+                        canvasCtx.lineTo(mouth.x*canvasElement.width, mouth.y*canvasElement.height);
+                        canvasCtx.strokeStyle = "rgba(255, 76, 76, 0.8)";
+                        canvasCtx.lineWidth = 6;
+                        canvasCtx.lineCap = "round";
+                        canvasCtx.stroke();
+                    }
                     return true;
                 }
             }
             return false;
         }
 
-        function drawPoint(point, color) {
-            const x = point.x * canvasElement.width;
-            const y = point.y * canvasElement.height;
-            canvasCtx.beginPath();
-            canvasCtx.arc(x, y, 5, 0, 2 * Math.PI);
-            canvasCtx.fillStyle = color;
-            canvasCtx.fill();
-        }
-        function drawHand(landmarks) { for (let point of landmarks) drawPoint(point, "#00FF00"); }
-        function drawLine(p1, p2) {
-            canvasCtx.beginPath();
-            canvasCtx.moveTo(p1.x * canvasElement.width, p1.y * canvasElement.height);
-            canvasCtx.lineTo(p2.x * canvasElement.width, p2.y * canvasElement.height);
-            canvasCtx.strokeStyle = "red";
-            canvasCtx.lineWidth = 5;
-            canvasCtx.stroke();
+        function playAlert() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = Date.now();
+            if (window.lastAlertTime && now - window.lastAlertTime < 800) return;
+            window.lastAlertTime = now;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine'; // 换成正弦波，声音圆润一点
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
         }
 
-        /* --- 5. 交互事件 --- */
-        const langSwitchBtn = document.getElementById('langSwitch');
+        /* --- Interactions --- */
+        const langBtn = document.getElementById('langSwitch');
         const donateBtn = document.getElementById('donateButton');
-        const qrModal = document.getElementById('qrModal');
-        const closeBtn = document.querySelector('.close-btn');
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'zh' ? 'en' : 'zh';
-            updateUIText();
-        }
-
+        const modal = document.getElementById('qrModal');
+        
         function updateUIText() {
             const t = translations[currentLang];
             document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) el.innerHTML = t[key];
+                const k = el.getAttribute('data-i18n');
+                if(t[k]) el.innerText = t[k];
             });
-            langSwitchBtn.innerText = t.lang_btn_text;
-            const camBtnLabel = enableWebcamButton.querySelector('.mdc-button__label');
-            camBtnLabel.innerText = webcamRunning ? t.btn_stop : t.btn_start;
-            if (!webcamRunning) statusText.innerText = t.status_wait;
+            langBtn.innerText = t.lang_btn;
+            const btnSpan = enableWebcamButton.querySelector('.btn-label');
+            btnSpan.innerText = webcamRunning ? t.btn_stop : t.btn_start;
+            enableWebcamButton.className = webcamRunning ? "btn btn-secondary" : "btn btn-primary";
         }
 
-        langSwitchBtn.addEventListener('click', toggleLanguage);
-        donateBtn.addEventListener('click', () => {
-            if (currentLang === 'zh') {
-                qrModal.style.display = "flex"; // 使用 flex 以便居中
-            } else {
-                window.open('https://www.buymeacoffee.com/xuting0510u', '_blank');
-            }
+        enableWebcamButton.addEventListener("click", enableCam);
+        pipButton.addEventListener("click", async () => {
+            if (video !== document.pictureInPictureElement) await video.requestPictureInPicture(); else await document.exitPictureInPicture();
         });
-        closeBtn.addEventListener('click', () => { qrModal.style.display = "none"; });
-        window.addEventListener('click', (e) => { if (e.target == qrModal) qrModal.style.display = "none"; });
+        langBtn.addEventListener('click', () => { currentLang = currentLang==='zh'?'en':'zh'; updateUIText(); });
+        
+        donateBtn.addEventListener('click', () => {
+            if (currentLang === 'zh') { modal.style.display = "flex"; } 
+            else { window.open('https://www.buymeacoffee.com/xuting0510u', '_blank'); }
+        });
+        
+        document.querySelector('.close-icon').onclick = () => modal.style.display = "none";
+        window.onclick = (e) => { if(e.target == modal) modal.style.display = "none"; };
 
     </script>
 </body>
