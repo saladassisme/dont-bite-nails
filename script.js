@@ -339,7 +339,7 @@ donateBtn.addEventListener('click', () => {
         qrModal.style.display = "block";
     } else {
         // === 请在这里替换你的 Buy Me a Coffee 链接 ===
-        window.open('https://www.buymeacoffee.com/xuting0510u', '_blank');
+        window.open('https://www.buymeacoffee.com/YOUR_USERNAME', '_blank');
     }
 });
 
