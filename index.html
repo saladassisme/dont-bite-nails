@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防咬指甲监控器</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <h1>🚫 不要咬指甲！</h1>
+    
+    <div class="container">
+        <p id="status">⏳ 等待摄像头授权...</p>
+        
+        <div class="video-wrapper">
+            <!-- 纯净的视频层 -->
+            <video id="webcam" autoplay playsinline></video>
+            <!-- 纯净的画线层 -->
+            <canvas id="output_canvas"></canvas>
+            <!-- 这里不再放任何文字了 -->
+        </div>
+
+        <!-- 新增：放在外面的提示语，清晰明了 -->
+        <p class="tip-text">
+            💡 提示：点击下方 <b>"开启悬浮小窗"</b> 可隐藏此页面，后台继续监控
+        </p>
+
+        <!-- 按钮区域 -->
+        <div class="controls">
+            <button id="pipButton" class="mdc-button mdc-button--outlined" style="display: none;">
+                <span class="mdc-button__label">📺 开启悬浮小窗</span>
+            </button>
+
+            <button id="enableWebcamButton" class="mdc-button mdc-button--raised">
+                <span class="mdc-button__label">开启摄像头监控</span>
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

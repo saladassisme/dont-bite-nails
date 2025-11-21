@@ -1,0 +1,76 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+h1 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.container {
+    position: relative;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    max-width: 680px;
+}
+
+/* 视频容器 */
+.video-wrapper {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    margin: 0 auto;
+}
+
+/* 只有视频和Canvas需要镜像翻转 */
+video, canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+    object-fit: cover;
+}
+
+/* 新增：外部提示文字样式 */
+.tip-text {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 14px;
+    background: #e8e8e8;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+#status {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-bottom: 30px; /* 底部留点空隙 */
+}
+
+/* 警告红框 */
+.alert-mode {
+    border: 6px solid #ff4444;
+    box-sizing: border-box;
+}
