@@ -5,12 +5,28 @@ body {
     align-items: center;
     background-color: #f0f2f5;
     color: #333;
+    margin: 0;
+    padding: 20px;
 }
 
-h1 {
-    margin-top: 20px;
-    margin-bottom: 10px;
+/* 语言切换按钮 */
+.lang-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 15px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
 }
+.lang-btn:hover {
+    background: #e0e0e0;
+}
+
+h1 { margin-top: 20px; margin-bottom: 10px; }
 
 .container {
     position: relative;
@@ -20,7 +36,6 @@ h1 {
     max-width: 680px;
 }
 
-/* 视频容器 */
 .video-wrapper {
     position: relative;
     width: 640px;
@@ -32,45 +47,80 @@ h1 {
     margin: 0 auto;
 }
 
-/* 只有视频和Canvas需要镜像翻转 */
 video, canvas {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: scaleX(-1);
-    object-fit: cover;
+    top: 0; left: 0; width: 100%; height: 100%;
+    transform: scaleX(-1); object-fit: cover;
 }
 
-/* 新增：外部提示文字样式 */
 .tip-text {
-    margin-top: 15px;
-    margin-bottom: 5px;
-    color: #666;
-    font-size: 14px;
+    margin-top: 15px; margin-bottom: 5px;
+    color: #666; font-size: 14px;
     background: #e8e8e8;
     display: inline-block;
-    padding: 5px 15px;
-    border-radius: 20px;
+    padding: 5px 15px; border-radius: 20px;
 }
 
-#status {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 18px;
-}
+#status { font-weight: bold; margin-bottom: 10px; font-size: 18px; }
 
 .controls {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    padding-bottom: 30px; /* 底部留点空隙 */
+    margin-top: 15px; display: flex; justify-content: center; gap: 15px;
+    padding-bottom: 30px; flex-wrap: wrap; /* 防止手机上挤在一起 */
 }
 
-/* 警告红框 */
-.alert-mode {
-    border: 6px solid #ff4444;
-    box-sizing: border-box;
+.alert-mode { border: 6px solid #ff4444; box-sizing: border-box; }
+
+/* 咖啡/打赏按钮 */
+.coffee-btn {
+    background-color: #FFDD00 !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+/* === 弹窗样式 (Modal) === */
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed; 
+    z-index: 100; 
+    left: 0; top: 0;
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.5); /* 半透明黑背景 */
+    backdrop-filter: blur(5px); /* 背景模糊效果 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto; 
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;          /* 手机上占满 */
+    max-width: 350px;    /* 电脑上限制最大宽度，稍微宽一点 */
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: popIn 0.3s ease;
+}
+/* 修复图片尺寸问题 */
+.qr-img {
+    width: 100%;        /* 宽度撑满容器 */
+    max-width: 260px;   /* 限制最大宽度，防止太大 */
+    height: auto;       /* !!! 关键：高度自动，保持原图比例，不会变形 */
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 加一点阴影更好看 */
+    display: inline-block;
+}
+.close-btn {
+    position: absolute;
+    top: 10px; right: 15px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close-btn:hover { color: #000; }
+
+@keyframes popIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
 }

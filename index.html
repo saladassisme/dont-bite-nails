@@ -9,33 +9,49 @@
 </head>
 <body>
 
-    <h1>🚫 不要咬指甲！</h1>
+    <!-- 语言切换按钮 (右上角) -->
+    <button id="langSwitch" class="lang-btn">🇺🇸 English</button>
+
+    <h1 data-i18n="title">🚫 不要咬指甲！</h1>
     
     <div class="container">
-        <p id="status">⏳ 等待摄像头授权...</p>
+        <p id="status" data-i18n="status_wait">⏳ 等待摄像头授权...</p>
         
         <div class="video-wrapper">
-            <!-- 纯净的视频层 -->
             <video id="webcam" autoplay playsinline></video>
-            <!-- 纯净的画线层 -->
             <canvas id="output_canvas"></canvas>
-            <!-- 这里不再放任何文字了 -->
         </div>
 
-        <!-- 新增：放在外面的提示语，清晰明了 -->
-        <p class="tip-text">
+        <p class="tip-text" data-i18n="tip">
             💡 提示：点击下方 <b>"开启悬浮小窗"</b> 可隐藏此页面，后台继续监控
         </p>
 
-        <!-- 按钮区域 -->
         <div class="controls">
+            <!-- 画中画按钮 -->
             <button id="pipButton" class="mdc-button mdc-button--outlined" style="display: none;">
-                <span class="mdc-button__label">📺 开启悬浮小窗</span>
+                <span class="mdc-button__label" data-i18n="btn_pip">📺 开启悬浮小窗</span>
             </button>
 
+            <!-- 监控开关 -->
             <button id="enableWebcamButton" class="mdc-button mdc-button--raised">
-                <span class="mdc-button__label">开启摄像头监控</span>
+                <span class="mdc-button__label" data-i18n="btn_start">开启摄像头监控</span>
             </button>
+
+            <!-- 支持作者按钮 (智能) -->
+            <button id="donateButton" class="mdc-button mdc-button--raised coffee-btn">
+                <span class="mdc-button__label" data-i18n="btn_donate">🧧 支持作者</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 二维码弹窗 (默认隐藏) -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 data-i18n="modal_title">感谢你的支持！❤️</h3>
+            <!-- 记得确保文件夹里有 qr.jpg -->
+            <img src="qr.jpg" alt="收款码" class="qr-img">
+            <p data-i18n="modal_desc">微信 / 支付宝 扫一扫</p>
         </div>
     </div>
 
